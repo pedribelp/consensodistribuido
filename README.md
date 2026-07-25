@@ -45,9 +45,3 @@ proposer repite ambas fases solo con la mayoría restante (2 de 3) y logra
 consenso igualmente. Por la regla de seguridad de Paxos, respeta el valor ya
 aceptado (`A=1`) en vez de imponer uno nuevo, mostrando que el protocolo nunca
 decide dos valores distintos.
-
-## Nota sobre la entrega completa
-
-Este repositorio cubre el código y los logs de ejecución. El video explicativo
-y la carga en Blackboard deben completarse por separado según los criterios
-de entrega de la actividad.
