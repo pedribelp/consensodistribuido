@@ -1,0 +1,38 @@
+[15:50:20] === SIMULACIÓN PAXOS: 3 nodos acceptors (N1, N2, N3) ===
+
+[15:50:20] >>> RONDA 1: los 3 nodos activos <<<
+[15:50:20] Proposer 1: FASE 1 - envía PREPARE(101) para el valor propuesto 'A=1'
+[15:50:20]   Acceptor 1: PROMISE a prepare(101)
+[15:50:20]   Acceptor 2: PROMISE a prepare(101)
+[15:50:20]   Acceptor 3: PROMISE a prepare(101)
+[15:50:20] Proposer 1: mayoría de PROMISE alcanzada (3/3)
+[15:50:20] Proposer 1: FASE 2 - envía ACCEPT(101, 'A=1')
+[15:50:20]   Acceptor 1: ACCEPTED propuesta 101 -> valor='A=1'
+[15:50:20]   Acceptor 2: ACCEPTED propuesta 101 -> valor='A=1'
+[15:50:20]   Acceptor 3: ACCEPTED propuesta 101 -> valor='A=1'
+[15:50:20] Proposer 1: *** CONSENSO ALCANZADO -> valor decidido = 'A=1' *** (3/3 aceptaciones)
+[15:50:20] --- Estado tras la ronda 1 ---
+[15:50:20]   Acceptor 1: estado=activo promised=101 accepted_id=101 accepted_value=A=1
+[15:50:20]   Acceptor 2: estado=activo promised=101 accepted_id=101 accepted_value=A=1
+[15:50:20]   Acceptor 3: estado=activo promised=101 accepted_id=101 accepted_value=A=1
+[15:50:20] 
+>>> SIMULANDO FALLO: Acceptor 2 deja de responder <<<
+[15:50:20] 
+>>> RONDA 2: Acceptor 2 caído, se intenta consenso con la mayoría restante <<<
+[15:50:20] Proposer 2: FASE 1 - envía PREPARE(102) para el valor propuesto 'B=2'
+[15:50:20]   Acceptor 1: PROMISE a prepare(102) (ya había aceptado A=1)
+[15:50:20]   Acceptor 3: PROMISE a prepare(102) (ya había aceptado A=1)
+[15:50:20] Proposer 2: mayoría de PROMISE alcanzada (2/3)
+[15:50:20] Proposer 2: respeta el valor ya aceptado previamente 'A=1' (regla de seguridad de Paxos)
+[15:50:20] Proposer 2: FASE 2 - envía ACCEPT(102, 'A=1')
+[15:50:20]   Acceptor 1: ACCEPTED propuesta 102 -> valor='A=1'
+[15:50:20]   Acceptor 3: ACCEPTED propuesta 102 -> valor='A=1'
+[15:50:20] Proposer 2: *** CONSENSO ALCANZADO -> valor decidido = 'A=1' *** (2/3 aceptaciones)
+[15:50:20] --- Estado tras la ronda 2 (con fallo) ---
+[15:50:20]   Acceptor 1: estado=activo promised=102 accepted_id=102 accepted_value=A=1
+[15:50:20]   Acceptor 2: estado=CAÍDO promised=101 accepted_id=101 accepted_value=A=1
+[15:50:20]   Acceptor 3: estado=activo promised=102 accepted_id=102 accepted_value=A=1
+[15:50:20] 
+[15:50:20] CONCLUSIÓN: Paxos siguió funcionando pese a la caída de un nodo. Valor final acordado por la mayoría = 'A=1'.
+[15:50:20] Nótese que, por la regla de seguridad de Paxos, el valor final coincide con
+[15:50:20] el ya aceptado en la ronda 1 ('A=1'): el protocolo nunca decide dos valores distintos.

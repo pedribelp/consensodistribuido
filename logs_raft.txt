@@ -1,0 +1,34 @@
+[15:50:23] === SIMULACIÓN RAFT: 3 nodos (N1, N2, N3) ===
+
+[15:50:25] Nodo 2: timeout de elección -> inicia elección para term 1
+[15:50:25] Nodo 2: elegido LÍDER en term 1 con 3/3 votos
+[15:50:25] --- Estado tras la elección inicial ---
+[15:50:25]   Nodo 1: estado=FOLLOWER term=1 log=[]
+[15:50:25]   Nodo 2: estado=LEADER term=1 log=[]
+[15:50:25]   Nodo 3: estado=FOLLOWER term=1 log=[]
+[15:50:25] Nodo 2 (LÍDER): propone y replica ('A', 1) en term 1
+[15:50:25] Nodo 1: replicó entrada ('A', 1) del líder 2 (term 1)
+[15:50:25] Nodo 3: replicó entrada ('A', 1) del líder 2 (term 1)
+[15:50:27] --- Estado tras replicar A=1 ---
+[15:50:27]   Nodo 1: estado=FOLLOWER term=1 log=[('A', 1)]
+[15:50:27]   Nodo 2: estado=LEADER term=1 log=[('A', 1)]
+[15:50:27]   Nodo 3: estado=FOLLOWER term=1 log=[('A', 1)]
+[15:50:27] 
+>>> SIMULANDO FALLO: el nodo líder 2 deja de responder <<<
+
+[15:50:29] Nodo 1: timeout de elección -> inicia elección para term 2
+[15:50:29] Nodo 1: elegido LÍDER en term 2 con 2/3 votos
+[15:50:29] 
+Nuevo líder tras el fallo: Nodo 1
+[15:50:29] --- Estado tras recuperación (nuevo líder) ---
+[15:50:29]   Nodo 1: estado=LEADER term=2 log=[('A', 1)]
+[15:50:29]   Nodo 2: estado=CAÍDO term=1 log=[('A', 1)]
+[15:50:29]   Nodo 3: estado=FOLLOWER term=2 log=[('A', 1)]
+[15:50:29] Nodo 1 (LÍDER): propone y replica ('B', 2) en term 2
+[15:50:29] Nodo 3: replicó entrada ('B', 2) del líder 1 (term 2)
+[15:50:30] --- Estado final tras replicar B=2 con el nuevo líder ---
+[15:50:30]   Nodo 1: estado=LEADER term=2 log=[('A', 1), ('B', 2)]
+[15:50:30]   Nodo 2: estado=CAÍDO term=1 log=[('A', 1)]
+[15:50:30]   Nodo 3: estado=FOLLOWER term=2 log=[('A', 1), ('B', 2)]
+[15:50:30] 
+CONCLUSIÓN: el clúster RAFT toleró la caída del líder y recuperó el consenso.
